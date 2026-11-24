@@ -1,17 +1,54 @@
-from database import connect_to_database
-from criar_tabelas import criar_tabela_usuarios
-from usuarios import listar_usuarios
+import sqlparse
+from database import conectar
+
+
+def executar_script(conexao, caminho):
+    cursor = conexao.cursor()
+
+    try:
+        with open(caminho, "r", encoding="utf-8") as arquivo:
+            script = arquivo.read()
+
+        comandos = sqlparse.split(script)
+
+        for comando in comandos:
+            if comando.strip():
+                cursor.execute(comando)
+
+                if cursor.description:
+                    colunas = [coluna[0] for coluna in cursor.description]
+                    resultados = cursor.fetchall()
+
+                    print("\n", colunas)
+
+                    for linha in resultados:
+                        print(linha)
+
+        conexao.commit()
+        print(f"\nScript executado: {caminho}")
+
+    except Exception as erro:
+        conexao.rollback()
+        print(f"Erro ao executar script: {erro}")
+
+    finally:
+        cursor.close()
+
 
 def main():
-    connection = connect_to_database()
+    conexao = conectar()
 
-    if connection:
-        try:
-            criar_tabela_usuarios(connection)
-            listar_usuarios(connection)
+    if conexao is None:
+        return
 
-        finally:
-            connection.close()
+    try:
+        executar_script(conexao, "sql/criar_banco.sql")
+        executar_script(conexao, "sql/povoar_banco.sql")
+        executar_script(conexao, "sql/consultas.sql")
+
+    finally:
+        conexao.close()
+
 
 if __name__ == "__main__":
     main()

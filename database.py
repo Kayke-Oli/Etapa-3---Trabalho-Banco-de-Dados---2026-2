@@ -16,4 +16,4 @@ def connect_to_database():
 
     except Error as e:
         print(f"Erro ao conectar ao MySQL: {e}")
-    return None
+        return None
