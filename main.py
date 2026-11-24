@@ -42,9 +42,9 @@ def main():
         return
 
     try:
-        executar_script(conexao, "sql/criar_banco.sql")
-        executar_script(conexao, "sql/povoar_banco.sql")
-        executar_script(conexao, "sql/consultas.sql")
+        #executar_script(conexao, "sql/01_criar_banco.sql")
+        #executar_script(conexao, "sql/02_povoar_banco.sql")
+        executar_script(conexao, "sql/03_consultas.sql")
 
     finally:
         conexao.close()

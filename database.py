@@ -2,7 +2,7 @@ import mysql.connector
 from mysql.connector import Error
 import os
 
-def connect_to_database():
+def conectar():
     try:
         connection = mysql.connector.connect(
             host="200.235.131.219",
